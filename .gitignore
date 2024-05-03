@@ -1,5 +1,8 @@
+# Ignore files related to virtual environment
 lib/
 bin/
 include/
+pyvenv.cfg
 
+# Ignore credentials file
 credentials.env
