@@ -1,11 +1,12 @@
 from datetime import datetime, timedelta
 from json import loads
+from math import floor
 from pandas import date_range
-from typing import Dict, List
+from typing import Dict, List, Any
 from garminconnect import Garmin
 
 
-def string_to_datetime(date: str):
+def string_to_datetime(date: str) -> datetime:
     """Converts a string in year-month-day format to a datetime object."""
     return datetime.strptime(date, '%Y-%m-%d').date()
 
@@ -30,7 +31,17 @@ def connect_to_garmin() -> Garmin:
     return garmin
 
 
-def get_activity_by_type_and_date(garmin: Garmin, activity_type: str, date: str) -> List[Dict]:
+def calculate_run_pace(distance: float, duration: float) -> str:
+    """Given distance in miles and duration in minutes, calculates run pace."""
+    pace_minutes = duration / distance
+    pace_seconds = str(int((pace_minutes - floor(pace_minutes)) * 60))
+    # If less than 10 seconds, prepend a 0 for formatting
+    if len(pace_seconds) == 1:
+        pace_seconds = f"0{pace_seconds}"
+    return f"{floor(pace_minutes)}:{pace_seconds}"
+
+
+def get_activities_by_type_and_date(garmin: Garmin, activity_type: str, date: str) -> List[Dict]:
     """Gets all activities of the specified type on the specified day.
 
     Args:
@@ -50,6 +61,27 @@ def get_activity_by_type_and_date(garmin: Garmin, activity_type: str, date: str)
     return ret
 
 
+def get_run_stats(activity: Dict[str, Any]) -> Dict[str, str]:
+    """Given a running activity, extracts all interesting stats into a dictionary.
+
+    Args:
+        activity(Dict[str, Any]): an activity object as returned from the Garmin server
+
+    Returns:
+        Dict[str, str]: a dictionary containing a run's distance in miles, total time, pace, and average heart rate
+    """
+    distance = meters_to_miles(activity["distance"])
+    duration = activity["duration"] / 60
+    pace = calculate_run_pace(distance, duration)
+    avg_hr = activity["averageHR"]
+    return {
+        "distance": str(distance),
+        "duration": str(duration),
+        "pace": pace,
+        "avg_hr": str(avg_hr)
+    }
+
+
 def get_running_mileage(garmin: Garmin, start_date: str, end_date: str) -> float:
     """Gets the total running mileage over a given range of dates.
 
@@ -67,15 +99,17 @@ def get_running_mileage(garmin: Garmin, start_date: str, end_date: str) -> float
     d_range = date_range(start_datetime,end_datetime-timedelta(days=1), freq='d').strftime('%Y-%m-%d').tolist()
     total_mileage = 0
     for date in d_range:
-        activites = get_activity_by_type_and_date(garmin, "running", date)
+        activites = get_activities_by_type_and_date(garmin, "running", date)
         for activity in activites:
             total_mileage += activity["distance"]
     return meters_to_miles(total_mileage)
 
 
 garmin = connect_to_garmin()
-result = get_running_mileage(garmin, "2024-03-14", "2024-03-21")
-print(result)
+activities = get_activities_by_type_and_date(garmin, "running", "2024-03-14")
+for activity in activities:
+    result = get_run_stats(activity)
+    print(result)
 
 
 """
