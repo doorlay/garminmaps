@@ -1,14 +1,23 @@
 from datetime import datetime, timedelta
 from json import loads
-from math import floor
 from pandas import date_range
 from typing import Dict, List, Any
 from garminconnect import Garmin
+
+# Custom-defined activity objects
+from activities import Run
 
 
 def string_to_datetime(date: str) -> datetime:
     """Converts a string in year-month-day format to a datetime object."""
     return datetime.strptime(date, '%Y-%m-%d').date()
+
+
+def create_date_range(start_date: str, end_date: str) -> List[str]:
+    """Given a start and end date, returns a list of all dates in between, inclusive."""
+    start_datetime = string_to_datetime(start_date)
+    end_datetime = string_to_datetime(end_date)
+    return date_range(start_datetime,end_datetime-timedelta(days=1), freq='d').strftime('%Y-%m-%d').tolist()
 
 
 def get_credentials() -> Dict[str, str]:
@@ -31,16 +40,6 @@ def connect_to_garmin() -> Garmin:
     return garmin
 
 
-def calculate_run_pace(distance: float, duration: float) -> str:
-    """Given distance in miles and duration in minutes, calculates run pace."""
-    pace_minutes = duration / distance
-    pace_seconds = str(int((pace_minutes - floor(pace_minutes)) * 60))
-    # If less than 10 seconds, prepend a 0 for formatting
-    if len(pace_seconds) == 1:
-        pace_seconds = f"0{pace_seconds}"
-    return f"{floor(pace_minutes)}:{pace_seconds}"
-
-
 def get_activities_by_type_and_date(garmin: Garmin, activity_type: str, date: str) -> List[Dict]:
     """Gets all activities of the specified type on the specified day.
 
@@ -61,56 +60,32 @@ def get_activities_by_type_and_date(garmin: Garmin, activity_type: str, date: st
     return ret
 
 
-def get_run_stats(activity: Dict[str, Any]) -> Dict[str, str]:
-    """Given a running activity, extracts all interesting stats into a dictionary.
+def get_activities_by_type_and_daterange(garmin: Garmin, activity_type: str, 
+                                         start_date: str, end_date: str) -> List[Dict]:
+    """Gets all activities of the specified type from the specified date range.
 
     Args:
-        activity(Dict[str, Any]): an activity object as returned from the Garmin server
+        garmin (Garmin):  a Garmin object which represents our connection to the Garmin server
+        activity_type (str): the type of activity to return data for. Must be one of "running"
+        start_date (str): the first date to return activities for. Written in year-month-day, e.g. "2024-03-14"
+        end_date (str): the last date to return activities for. Written in year-month-day, e.g. "2024-03-14"
 
     Returns:
-        Dict[str, str]: a dictionary containing a run's distance in miles, total time, pace, and average heart rate
+        List[Dict]: a list of all activities that match the inputted criteria
     """
-    distance = meters_to_miles(activity["distance"])
-    duration = activity["duration"] / 60
-    pace = calculate_run_pace(distance, duration)
-    avg_hr = activity["averageHR"]
-    return {
-        "distance": str(distance),
-        "duration": str(duration),
-        "pace": pace,
-        "avg_hr": str(avg_hr)
-    }
-
-
-def get_running_mileage(garmin: Garmin, start_date: str, end_date: str) -> float:
-    """Gets the total running mileage over a given range of dates.
-
-    Args:
-        garmin (Garmin): a Garmin object which represents our connection to the Garmin server
-        start_date (str): the beginning of our range of dates (inclusive). Written in year-month-day, e.g. "2024-03-14"
-        end_date (str): the end of our range of dates (inclusive). Written in year-month-day, e.g. "2024-03-14"
-    
-    Returns:
-        float: total running mileage, in miles, over the given range of dates
-        
-    """
-    start_datetime = string_to_datetime(start_date)
-    end_datetime = string_to_datetime(end_date)
-    d_range = date_range(start_datetime,end_datetime-timedelta(days=1), freq='d').strftime('%Y-%m-%d').tolist()
-    total_mileage = 0
-    for date in d_range:
-        activites = get_activities_by_type_and_date(garmin, "running", date)
-        for activity in activites:
-            total_mileage += activity["distance"]
-    return meters_to_miles(total_mileage)
+    ret = []
+    date_range = create_date_range(start_date, end_date)
+    for date in date_range:
+        activites = get_activities_by_type_and_date(garmin, activity_type, date)
+        ret += activites
+    return ret
 
 
 garmin = connect_to_garmin()
-activities = get_activities_by_type_and_date(garmin, "running", "2024-03-14")
+activities = get_activities_by_type_and_daterange(garmin, "running", "2024-03-14", "2024-05-04")
 for activity in activities:
-    result = get_run_stats(activity)
-    print(result)
-
+    run = Run(activity)
+    print(run)
 
 """
 I'd like bar charts that do neat data visualization for me. Probably on a website or an app or something.
