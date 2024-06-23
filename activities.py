@@ -13,18 +13,21 @@ class Run:
         self.distance = meters_to_miles(activity["distance"])
         self.pace = self.calculate_run_pace(self.distance, self.duration)
         self.avg_hr = activity["averageHR"]
+        self.start_time = activity["startTimeLocal"]
 
     def __str__(self):
         data = {
+            "start_time": self.start_time,
             "distance": self.distance,
             "duration": self.duration,
             "pace": self.pace,
-            "avg_hr": self.avg_hr
+            "avg_hr": self.avg_hr,
         }
         return str(data)
 
     def __repr__(self):
         data = {
+            "start_time": self.start_time,
             "distance": self.distance,
             "duration": self.duration,
             "pace": self.pace,

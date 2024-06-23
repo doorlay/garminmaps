@@ -1,10 +1,10 @@
 from datetime import datetime, timedelta
 from json import loads
 from pandas import date_range
-from typing import Dict, List, Any
+from typing import Dict, List
 from garminconnect import Garmin
 
-# Custom-defined activity objects
+# Import custom-defined activity objects
 from activities import Run
 
 
@@ -82,16 +82,16 @@ def get_activities_by_type_and_daterange(garmin: Garmin, activity_type: str,
 
 
 garmin = connect_to_garmin()
-activities = get_activities_by_type_and_daterange(garmin, "running", "2024-03-14", "2024-05-04")
+activities = get_activities_by_type_and_daterange(garmin, "running", "2024-05-01", "2024-06-22")
 for activity in activities:
     run = Run(activity)
     print(run)
 
 """
-I'd like bar charts that do neat data visualization for me. Probably on a website or an app or something.
-
-So this will likely just be an API for me.
-
-Maybe I'll do PDF visualization or something and upload to a website? That way it'll be static by much easier to do. Not sure yet.
+Planned Features
+- I want to see a week by week view of my activity history, like google calendar.
+- I want to have my running training goals plotted, with how closely I've followed them
+- I want to be able to compare goals to what's actually happened
+- Bar chart visualizations of my activity data
 
 """
