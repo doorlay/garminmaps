@@ -86,12 +86,3 @@ activities = get_activities_by_type_and_daterange(garmin, "running", "2024-05-01
 for activity in activities:
     run = Run(activity)
     print(run)
-
-"""
-Planned Features
-- I want to see a week by week view of my activity history, like google calendar.
-- I want to have my running training goals plotted, with how closely I've followed them
-- I want to be able to compare goals to what's actually happened
-- Bar chart visualizations of my activity data
-
-"""
