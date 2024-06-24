@@ -4,5 +4,10 @@ bin/
 include/
 pyvenv.cfg
 
+# Ignore node files
+node_modules/
+package-lock.json
+package.json
+
 # Ignore credentials file
 credentials.env

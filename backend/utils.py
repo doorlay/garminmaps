@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from json import loads
 from pandas import date_range
-from typing import Dict, List
+from typing import Dict, List, Any
 from garminconnect import Garmin
 
 # Import custom-defined activity objects
@@ -40,7 +40,14 @@ def connect_to_garmin() -> Garmin:
     return garmin
 
 
-def get_activities_by_type_and_date(garmin: Garmin, activity_type: str, date: str) -> List[Dict]:
+def convert_to_class(activity: Dict[str, Any]):
+    """Converts an activity object returned by the Garmin API to a custom class"""
+    activity_type = activity["activityType"]["typeKey"]
+    if activity_type == "running":
+        return Run(activity)
+
+
+def get_activities(garmin: Garmin, activity_type: str, date: str) -> List[Dict]:
     """Gets all activities of the specified type on the specified day.
 
     Args:
@@ -60,8 +67,7 @@ def get_activities_by_type_and_date(garmin: Garmin, activity_type: str, date: st
     return ret
 
 
-def get_activities_by_type_and_daterange(garmin: Garmin, activity_type: str, 
-                                         start_date: str, end_date: str) -> List[Dict]:
+def get_activities_range(garmin: Garmin, activity_type: str, start_date: str, end_date: str) -> List[Dict]:
     """Gets all activities of the specified type from the specified date range.
 
     Args:
@@ -76,13 +82,7 @@ def get_activities_by_type_and_daterange(garmin: Garmin, activity_type: str,
     ret = []
     date_range = create_date_range(start_date, end_date)
     for date in date_range:
-        activites = get_activities_by_type_and_date(garmin, activity_type, date)
-        ret += activites
+        activities = get_activities(garmin, activity_type, date)
+        for activity in activities:
+            ret.append(convert_to_class(activity))
     return ret
-
-
-garmin = connect_to_garmin()
-activities = get_activities_by_type_and_daterange(garmin, "running", "2024-05-01", "2024-06-22")
-for activity in activities:
-    run = Run(activity)
-    print(run)
