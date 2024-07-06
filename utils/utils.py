@@ -5,19 +5,23 @@ from typing import Dict, List, Any
 from garminconnect import Garmin
 
 # Import custom-defined activity objects
-from activities import Run
+from utils.activities import Run
 
 
 def string_to_datetime(date: str) -> datetime:
     """Converts a string in year-month-day format to a datetime object."""
-    return datetime.strptime(date, '%Y-%m-%d').date()
+    return datetime.strptime(date, "%Y-%m-%d").date()
 
 
 def create_date_range(start_date: str, end_date: str) -> List[str]:
     """Given a start and end date, returns a list of all dates in between, inclusive."""
     start_datetime = string_to_datetime(start_date)
     end_datetime = string_to_datetime(end_date)
-    return date_range(start_datetime,end_datetime-timedelta(days=1), freq='d').strftime('%Y-%m-%d').tolist()
+    return (
+        date_range(start_datetime, end_datetime - timedelta(days=1), freq="d")
+        .strftime("%Y-%m-%d")
+        .tolist()
+    )
 
 
 def get_credentials() -> Dict[str, str]:
@@ -67,7 +71,26 @@ def get_activities(garmin: Garmin, activity_type: str, date: str) -> List[Dict]:
     return ret
 
 
-def get_activities_range(garmin: Garmin, activity_type: str, start_date: str, end_date: str) -> List[Dict]:
+def get_activity_ids(garmin: Garmin, activity_type: str, date: str) -> List[str]:
+    """Given a date and a type of activity, returns the activity id for all activites that match the criteria."""
+    response = garmin.get_activities_fordate(date)
+    activites = response["ActivitesForDay"]["payload"]
+    return [
+        activity["activityId"]
+        for activity in activites
+        if activity["activityType"]["typeKey"] == activity_type
+    ]
+
+
+# def get_activity_ids(
+#     garmin: Garmin, activity_type: str, start_date: str, end_date: str
+# ) -> List[str]:
+#     ret = []
+
+
+def get_activities_range(
+    garmin: Garmin, activity_type: str, start_date: str, end_date: str
+) -> List[Dict]:
     """Gets all activities of the specified type from the specified date range.
 
     Args:

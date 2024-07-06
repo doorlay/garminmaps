@@ -1,6 +1,6 @@
-import json
 from typing import Dict, Any
 from math import floor
+
 
 # Helper functions used for all activity classes
 def meters_to_miles(distance: float) -> float:
@@ -32,7 +32,7 @@ class Run:
             "distance": self.distance,
             "duration": self.duration,
             "pace": self.pace,
-            "avg_hr": self.avg_hr
+            "avg_hr": self.avg_hr,
         }
         return str(data)
 

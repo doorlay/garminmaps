@@ -1,7 +1,5 @@
 # Ignore files related to virtual environment
-lib/
-bin/
-include/
+.venv/
 pyvenv.cfg
 
 # Ignore node files
@@ -13,4 +11,4 @@ package.json
 credentials.env
 
 # Ignore cached files
-backend/__pycache__/
+__pycache__/
