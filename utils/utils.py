@@ -1,8 +1,11 @@
 from datetime import datetime, timedelta
-from json import loads
 from pandas import date_range
 from typing import Dict, List, Any
-from garminconnect import Garmin
+from garminconnect import Garmin, GarminConnectAuthenticationError
+from garth.exc import GarthHTTPError
+from getpass import getpass
+
+TOKEN_DIR = "~/.garminmaps"
 
 # Import custom-defined activity objects
 from utils.activities import Run
@@ -24,23 +27,30 @@ def create_date_range(start_date: str, end_date: str) -> List[str]:
     )
 
 
-def get_credentials() -> Dict[str, str]:
-    """Reads account credentials from the credentials.env file, returns in a dict."""
-    with open("credentials.env") as creds_file:
-        creds = loads(creds_file.readline())
-        return creds
-
-
 def meters_to_miles(distance: float) -> float:
     """Converts meters to miles, returning a float."""
     return distance * 0.000621371
 
 
-def connect_to_garmin() -> Garmin:
-    """Connects to the Garmin server and returns a Garmin object."""
-    creds = get_credentials()
-    garmin = Garmin(creds["email"], creds["password"])
-    garmin.login()
+def get_mfa():
+    """Get MFA."""
+    return input("MFA one-time code: ")
+
+
+def login() -> Garmin:
+    """Connects to the Garmin server via OAuth2 and returns a Garmin object."""
+    try:
+        # Attempt to resume an active session, if there is one
+        garmin = Garmin()
+        garmin.login(TOKEN_DIR)
+    except (FileNotFoundError, GarthHTTPError, GarminConnectAuthenticationError):
+        # If session is expired or has never been established, relogin and save session details to ~/.garminmaps
+        # If your account has MFA enabled, you'll be prompted during the login
+        email = input("Email: ")
+        password = getpass("Password: ")
+        garmin = Garmin(email=email, password=password, is_cn=False, prompt_mfa=get_mfa)
+        garmin.login()
+        garmin.garth.dump(TOKEN_DIR)
     return garmin
 
 

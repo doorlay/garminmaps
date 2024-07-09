@@ -1,5 +1,6 @@
 pandas
 garminconnect
+garth
 folium
 gpxpy
 ruff
