@@ -82,12 +82,6 @@ def get_activity_ids(garmin: Garmin, activity_type: str, date: str) -> List[str]
     ]
 
 
-# def get_activity_ids(
-#     garmin: Garmin, activity_type: str, start_date: str, end_date: str
-# ) -> List[str]:
-#     ret = []
-
-
 def get_activities_range(
     garmin: Garmin, activity_type: str, start_date: str, end_date: str
 ) -> List[Dict]:

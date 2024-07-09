@@ -15,3 +15,6 @@ __pycache__/
 
 # Ignore graph files
 graphs/
+
+# Ignore ruff files
+.ruff_cache/
