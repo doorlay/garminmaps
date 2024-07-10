@@ -1,4 +1,4 @@
-from folium import Map, PolyLine
+from folium import Map, PolyLine, Marker, Icon
 from gpxpy import parse
 
 
@@ -12,9 +12,14 @@ def create_map(activity_bytes: bytes) -> Map:
     """
     gpx = parse(activity_bytes)
     points = []
+    start_coord = []
     for track in gpx.tracks:
         for segment in track.segments:
             for point in segment.points:
+                # Track the coordinates of the start of the activity
+                if not start_coord:
+                    start_coord.append(point.latitude)
+                    start_coord.append(point.longitude)
                 points.append(tuple([point.latitude, point.longitude]))
     latitude = sum(p[0] for p in points) / len(points)
     longitude = sum(p[1] for p in points) / len(points)
@@ -22,6 +27,7 @@ def create_map(activity_bytes: bytes) -> Map:
         location=[latitude, longitude], zoom_start=100, tiles="cartodb positron"
     )
     PolyLine(points, color="red", weight=2.5, opacity=1).add_to(activity_map)
+    Marker(location=start_coord, tooltip="Click me!", popup="Run", icon=Icon(icon="cloud")).add_to(activity_map)
     return activity_map
 
 
