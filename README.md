@@ -12,6 +12,5 @@ Run `python3 main.py` to generate an `index.html` file in the root directory of 
 
 ## Future Work
 - Add support for range-based plotting
-- Add markers to map with data for individual runs
 - Superimpose activity data onto the graph
 - Use Wails to turn this into an actual application. Use in-browser SSO.
