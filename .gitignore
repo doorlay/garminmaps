@@ -14,7 +14,7 @@ credentials.env
 __pycache__/
 
 # Ignore graph files
-index.html
+graphs/
 
 # Ignore ruff files
 .ruff_cache/

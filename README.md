@@ -4,7 +4,7 @@
 3. `pip3 install -r requirements.txt`
 
 ## Usage
-Run `python3 main.py` to generate an `index.html` file in the root directory of the project. If you do not have a valid Garmin OAuth token, you will be prompted for your Garmin credentials. These credentials will be used to generate an OAuth token, valid for one year, stored in `~/.garminmaps` on your host.
+Run `python3 example.py` to generate example graphs from your Garmin Connect data. This can take around 30 seconds, depending on how many activities you have recorded. If you do not have a valid Garmin OAuth token, you will be prompted for your Garmin credentials. These credentials will be used to generate an OAuth token, valid for one year, stored in `~/.garminmaps` on your host.
 
 ## Contributing
 Run `ruff format && ruff check` prior to committing code.
