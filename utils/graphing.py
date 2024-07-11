@@ -1,15 +1,19 @@
-from folium import Map, PolyLine, Marker, Icon
+from folium import Map, PolyLine, Marker, Icon, map
 from gpxpy import parse
 
 
-def create_map(activity_bytes: bytes) -> Map:
+def create_map(activity_bytes: bytes = None) -> Map:
     """Given an activity in bytes, creates a new leaflet.js Map.
 
     Args:
-        activity_bytes (bytes): A GPX file downloaded from Garmin Connect, representing an activity
+        [optional] activity_bytes (bytes): A GPX file downloaded from Garmin Connect, representing an activity
     Returns:
         Map: The newly created leaflet.js Map, with the activity plotted on it
     """
+    # If activity_bytes not supplied, create an empty Map
+    if activity_bytes is None:
+        return Map(zoom_start=100, tiles="cartodb positron")
+    # If activity_bytes is supplied, create a Map and plot the activity 
     gpx = parse(activity_bytes)
     points = []
     start_coord = []
@@ -24,7 +28,7 @@ def create_map(activity_bytes: bytes) -> Map:
     avg_latitude = sum(p[0] for p in points) / len(points)
     avg_longitude = sum(p[1] for p in points) / len(points)
     activity_map = Map(
-        location=[avg_latitude, avg_longitude], zoom_start=100, tiles="cartodb positron"
+        location=[avg_latitude, avg_longitude], zoom_start=100, tiles="cartodb positron",
     )
     PolyLine(points, color="red", weight=2.5, opacity=1).add_to(activity_map)
     Marker(location=start_coord, tooltip="Click me!", popup="Run", icon=Icon(icon="cloud")).add_to(activity_map)
@@ -49,5 +53,10 @@ def plot_on_map(activity_bytes: bytes, activity_map: Map) -> None:
                     start_coord.append(point.latitude)
                     start_coord.append(point.longitude)
                 points.append(tuple([point.latitude, point.longitude]))
+    # If Map.location is None, set it now.
+    if activity_map.location is None:
+        avg_latitude = sum(p[0] for p in points) / len(points)
+        avg_longitude = sum(p[1] for p in points) / len(points)
+        activity_map.location = [avg_latitude, avg_longitude]
     PolyLine(points, color="red", weight=2.5, opacity=1).add_to(activity_map)
     Marker(location=start_coord, tooltip="Click me!", popup="Run", icon=Icon(icon="cloud")).add_to(activity_map)

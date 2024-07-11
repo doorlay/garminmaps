@@ -73,8 +73,12 @@ def get_activities(garmin: Garmin, activity_type: str, date: str) -> List[Dict]:
         List[Dict]: a list of all activities that match the inputted criteria
     """
     response = garmin.get_activities_fordate(date)
-    activities = response["ActivitiesForDay"]["payload"]
     ret = []
+    try:
+        activities = response["ActivitiesForDay"]["payload"]
+    # If no activities of activity_type were recorded on date, return empty list
+    except KeyError:
+        return ret
     for activity in activities:
         if activity["activityType"]["typeKey"] == activity_type:
             ret.append(activity)
@@ -84,10 +88,14 @@ def get_activities(garmin: Garmin, activity_type: str, date: str) -> List[Dict]:
 def get_activity_ids(garmin: Garmin, activity_type: str, date: str) -> List[str]:
     """Given a date and a type of activity, returns the activity id for all activites that match the criteria."""
     response = garmin.get_activities_fordate(date)
-    activites = response["ActivitesForDay"]["payload"]
+    try:
+        activities = response["ActivitiesForDay"]["payload"]
+    # If no activities of activity_type were recorded on date, return empty list
+    except KeyError:
+        return []
     return [
         activity["activityId"]
-        for activity in activites
+        for activity in activities
         if activity["activityType"]["typeKey"] == activity_type
     ]
 
