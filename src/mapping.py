@@ -1,4 +1,4 @@
-from folium import Map, PolyLine, Marker, Icon, map
+from folium import Map, PolyLine, Marker, Icon
 from gpxpy import parse
 
 

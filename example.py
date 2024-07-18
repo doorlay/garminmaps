@@ -1,5 +1,6 @@
-from utils.utils import login, get_activity_ids, create_date_range
-from utils.graphing import create_map, plot_on_map
+from src.garmin import login, get_activity_ids
+from src.utils import create_date_range
+from src.mapping import create_map, plot_on_map
 
 
 """Example 1: Plot all runs from June 2024 onto a leaflet.js map."""

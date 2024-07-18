@@ -1,10 +1,13 @@
+## Overview
+This is a Python SDK for generating interactive leaflet.js maps from activity tracking data. This project currently supports automated downloading of Garmin connect data, with future work for other activity trackers.
+
 ## Setup
 1. `python3 -m venv .venv`
 2. `source .venv/bin/activate`
 3. `pip3 install -r requirements.txt`
 
 ## Usage
-Run `python3 example.py` to generate example graphs from your Garmin Connect data. This can take around 30 seconds, depending on how many activities you have recorded. If you do not have a valid Garmin OAuth token, you will be prompted for your Garmin credentials. These credentials will be used to generate an OAuth token, valid for one year, stored in `~/.garminmaps` on your host.
+Run `python3 example.py` to generate example graphs from your Garmin Connect data. This can take around 30 seconds, depending on how many activities you have recorded. If you do not have a valid Garmin OAuth token, you will be prompted for your Garmin credentials. These credentials will be used to generate an OAuth token, valid for one year, stored in `~/.activitymaps-garmin` on your host.
 
 ## Contributing
 Run `ruff format && ruff check` prior to committing code.
@@ -17,3 +20,4 @@ Run `ruff format && ruff check` prior to committing code.
 - Drop down menu in the upper left for each type of activity, color-coded. When you select a type, only those types are displayed
 - For each activity type, group activities in a similar location and allow selection of that location. When selected, navigate to that region on the map.
 - For each activity, display information on click. e.g. when you click on a run, you get distance, pace, bpm, calories burned, etc. 
+- hand-roll GPX parsing to lower dependencies. Maybe the same for mapping, auth
