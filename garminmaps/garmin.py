@@ -1,12 +1,9 @@
-from typing import Dict, List, Any
+from typing import Dict, List
 from garminconnect import Garmin, GarminConnectAuthenticationError
 from garth.exc import GarthHTTPError
 from getpass import getpass
 
-TOKEN_DIR = "~/.activitymaps-garmin"
-
-from src.utils import create_date_range
-
+TOKEN_DIR = "~/.garminmaps"
 
 def get_mfa():
     """Get MFA."""
@@ -28,13 +25,6 @@ def login() -> Garmin:
         garmin.login()
         garmin.garth.dump(TOKEN_DIR)
     return garmin
-
-
-def convert_to_class(activity: Dict[str, Any]):
-    """Converts an activity object returned by the Garmin API to a custom class"""
-    activity_type = activity["activityType"]["typeKey"]
-    if activity_type == "running":
-        return Run(activity)
 
 
 def get_activities(garmin: Garmin, activity_type: str, date: str) -> List[Dict]:
@@ -74,26 +64,3 @@ def get_activity_ids(garmin: Garmin, activity_type: str, date: str) -> List[str]
         for activity in activities
         if activity["activityType"]["typeKey"] == activity_type
     ]
-
-
-def get_activities_range(
-    garmin: Garmin, activity_type: str, start_date: str, end_date: str
-) -> List[Dict]:
-    """Gets all activities of the specified type from the specified date range.
-
-    Args:
-        garmin (Garmin):  a Garmin object which represents our connection to the Garmin server
-        activity_type (str): the type of activity to return data for. Must be one of "running"
-        start_date (str): the first date to return activities for. Written in year-month-day, e.g. "2024-03-14"
-        end_date (str): the last date to return activities for. Written in year-month-day, e.g. "2024-03-14"
-
-    Returns:
-        List[Dict]: a list of all activities that match the inputted criteria
-    """
-    ret = []
-    date_range = create_date_range(start_date, end_date)
-    for date in date_range:
-        activities = get_activities(garmin, activity_type, date)
-        for activity in activities:
-            ret.append(convert_to_class(activity))
-    return ret
