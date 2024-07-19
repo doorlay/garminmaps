@@ -2,14 +2,6 @@
 .venv/
 pyvenv.cfg
 
-# Ignore node files
-node_modules/
-package-lock.json
-package.json
-
-# Ignore credentials file
-credentials.env
-
 # Ignore cached files
 __pycache__/
 
@@ -18,3 +10,6 @@ graphs/
 
 # Ignore ruff files
 .ruff_cache/
+
+# Ignore build files
+dist/
