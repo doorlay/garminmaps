@@ -39,7 +39,7 @@ def create_map(activity_bytes: bytes = None) -> Map:
     return activity_map
 
 
-def plot_on_map(activity_bytes: bytes, activity_map: Map) -> None:
+def update_map(activity_bytes: bytes, activity_map: Map) -> None:
     """Given an activity in bytes and a Folium map, plots the activity on the map.
 
     Args:

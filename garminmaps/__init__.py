@@ -1,1 +1,2 @@
-# TODO: export all functions and objects required for SDK usage
+from garminmaps.garmin import login, get_activities
+from garminmaps.mapping import create_map, update_map

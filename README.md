@@ -1,5 +1,26 @@
-## Usage
-Run `python3 tests/example.py` to generate example graphs from your Garmin Connect data. This can take around 30 seconds, depending on how many activities you have recorded. If you do not have a valid Garmin OAuth token, you will be prompted for your Garmin credentials. These credentials will be used to generate an OAuth token, valid for one year, stored in `~/.garminmaps` on your host.
+<!-- ## Usage
+Run `pip install garminmaps` to install.
+
+Example usage:
+```
+import garminmaps
+
+"""Example: Plot all runs from June 2024 onto a leaflet.js map."""
+
+# Login to Garmin Connect with OAuth2
+garmin_client = garminmaps.login()
+
+# Create a new empty leaflet.js map
+running_map = garminmaps.create_map()
+
+# Get data for all runs in June 2024
+activites = garminmaps.get_activities(garmin_client, "running", "2024-06-01", "2024-06-30")
+for activity in activites:
+    activity.plot(running_map)
+
+# Write the leaflet.js map to disk
+running_map.save("runs.html")
+``` -->
 
 ## Dev setup
 1. `python3 -m venv .venv`

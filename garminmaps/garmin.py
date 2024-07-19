@@ -1,7 +1,10 @@
-from typing import Dict, List
+from typing import List
 from garminconnect import Garmin, GarminConnectAuthenticationError
 from garth.exc import GarthHTTPError
 from getpass import getpass
+
+from activities import Activity
+from utils import create_date_range
 
 TOKEN_DIR = "~/.garminmaps"
 
@@ -27,40 +30,28 @@ def login() -> Garmin:
     return garmin
 
 
-def get_activities(garmin: Garmin, activity_type: str, date: str) -> List[Dict]:
-    """Gets all activities of the specified type on the specified day.
+def get_activities(garmin: Garmin, activity_type: str, start_date: str, end_date) -> List[Activity]:
+    """Gets all activities of the specified type from the specified date range.
 
     Args:
         garmin (Garmin): a Garmin object which represents our connection to the Garmin server
         activity_type (str): the type of activity to return data for. Must be one of "running"
-        date (str): the date to return activities for. Written in year-month-day, e.g. "2024-03-14"
-
+        start_date (str): the start date to return activities for. Written in year-month-day, e.g. "2024-03-14"
+        end_date (str): the end date to return activities for. Written in year-month-day, e.g. "2024-03-20"
+        
     Returns:
         List[Dict]: a list of all activities that match the inputted criteria
     """
-    response = garmin.get_activities_fordate(date)
-    ret = []
-    try:
-        activities = response["ActivitiesForDay"]["payload"]
-    # If no activities of activity_type were recorded on date, return empty list
-    except KeyError:
-        return ret
-    for activity in activities:
-        if activity["activityType"]["typeKey"] == activity_type:
-            ret.append(activity)
-    return ret
-
-
-def get_activity_ids(garmin: Garmin, activity_type: str, date: str) -> List[str]:
-    """Given a date and a type of activity, returns the activity id for all activites that match the criteria."""
-    response = garmin.get_activities_fordate(date)
-    try:
-        activities = response["ActivitiesForDay"]["payload"]
-    # If no activities of activity_type were recorded on date, return empty list
-    except KeyError:
-        return []
-    return [
-        activity["activityId"]
-        for activity in activities
-        if activity["activityType"]["typeKey"] == activity_type
-    ]
+    activity_objects = []
+    date_range = create_date_range(start_date, end_date)
+    for date in date_range:
+        response = garmin.get_activities_fordate(date)
+        try:
+            activities = response["ActivitiesForDay"]["payload"]
+        # If no activities of activity_type were recorded on date, skip
+        except KeyError:
+            pass
+        for activity in activities:
+            if activity["activityType"]["typeKey"] == activity_type:
+                activity_objects.append(Activity(activity, garmin))
+    return activity_objects
