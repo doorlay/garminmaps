@@ -8,6 +8,7 @@ from .utils import create_date_range
 
 TOKEN_DIR = "~/.garminmaps"
 
+
 def get_mfa():
     """Get MFA."""
     return input("MFA one-time code: ")
@@ -30,7 +31,9 @@ def login() -> Garmin:
     return garmin
 
 
-def get_activities(garmin: Garmin, activity_type: str, start_date: str, end_date) -> List[Activity]:
+def get_activities(
+    garmin: Garmin, activity_type: str, start_date: str, end_date
+) -> List[Activity]:
     """Gets all activities of the specified type from the specified date range.
 
     Args:
@@ -38,7 +41,7 @@ def get_activities(garmin: Garmin, activity_type: str, start_date: str, end_date
         activity_type (str): the type of activity to return data for. Must be one of "running"
         start_date (str): the start date to return activities for. Written in year-month-day, e.g. "2024-03-14"
         end_date (str): the end date to return activities for. Written in year-month-day, e.g. "2024-03-20"
-        
+
     Returns:
         List[Dict]: a list of all activities that match the inputted criteria
     """
