@@ -23,10 +23,11 @@ running_map.save("runs.html")
 ```
 
 ## Contributing
-Setting up your dev environment:
-1. `python3 -m venv .venv`
-2. `source .venv/bin/activate`
-3. `pip3 install -r requirements.txt`  
+Setting up dev environment:
+1. Clone this repository.
+2. `python3 -m venv .venv`
+3. `source .venv/bin/activate`
+4. `pip3 install .`
 
 Commiting code:
 1. `ruff format && ruff check`
