@@ -3,5 +3,3 @@ garminconnect
 garth
 folium
 gpxpy
-ruff
-build

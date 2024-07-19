@@ -1,4 +1,4 @@
-from mapping import update_map
+from .mapping import update_map
 
 class Activity:
     def __init__(self, payload, garmin_client):

@@ -1,6 +1,6 @@
 [project]
 name = "garminmaps"
-version = "0.0.1"
+version = "0.0.5"
 authors = [
   { name="Nic Doorlay", email="ndoorlay@gmail.com" },
 ]
@@ -12,6 +12,21 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
+dependencies = [
+    "pandas==2.2.2",
+    "garminconnect==0.2.19",
+    "garth==0.4.46",
+    "folium==0.17.0",
+    "gpxpy==1.6.2"
+]
+
+[project.optional-dependencies]
+dev = [
+    "build==1.2.1",
+    "ruff==0.5.3",
+    "twine==5.1.1",
+]
+
 
 [project.urls]
 Homepage = "https://github.com/doorlay/garminmaps"
