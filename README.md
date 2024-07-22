@@ -1,7 +1,12 @@
-## Usage
-Run `pip install garminmaps` to install.
+## Overview
+garminmaps is an SDK for generating interactive leaflet.js maps from Garmin data.
 
-Example usage:
+## Installation
+``` 
+pip3 install garminmaps
+```
+
+## Example usage
 ```
 import garminmaps
 
@@ -16,14 +21,14 @@ running_map = garminmaps.create_map()
 # Get data for all runs in June 2024
 activites = garminmaps.get_activities(garmin_client, "running", "2024-06-01", "2024-06-30")
 for activity in activites:
-    activity.plot(running_map)
+    activity.plot(running_map, "blue")
 
 # Write the leaflet.js map to disk
 running_map.save("runs.html")
 ```
 
 ## Contributing
-Setting up dev environment:
+Creating a dev environment:
 1. Clone this repository.
 2. `python3 -m venv .venv`
 3. `source .venv/bin/activate`

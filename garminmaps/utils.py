@@ -2,6 +2,8 @@ from datetime import datetime, timedelta
 from pandas import date_range
 from typing import List
 
+from .activities import Activity
+
 
 def string_to_datetime(date: str) -> datetime:
     """Converts a string in year-month-day format to a datetime object."""
@@ -17,3 +19,6 @@ def create_date_range(start_date: str, end_date: str) -> List[str]:
         .strftime("%Y-%m-%d")
         .tolist()
     )
+
+def create_activity_summary(activity: Activity) -> str:
+    f"{(activity.type).upper()}\nDistance: {activity.distance}\n Duration: {activity.duration}"

@@ -12,5 +12,5 @@ class Activity:
         )
 
     # Plots the activity on the given map
-    def plot(self, map) -> None:
-        update_map(self.gpx, map)
+    def plot(self, map, line_color) -> None:
+        update_map(self, map, line_color)
