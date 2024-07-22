@@ -21,7 +21,7 @@ running_map = garminmaps.create_map()
 # Get data for all runs in June 2024
 activites = garminmaps.get_activities(garmin_client, "running", "2024-06-01", "2024-06-30")
 for activity in activites:
-    activity.plot(running_map, "blue")
+    garmin_client.update_map(activity, running_map, "blue")
 
 # Write the leaflet.js map to disk
 running_map.save("runs.html")
@@ -39,10 +39,11 @@ Commiting code:
 2. Fork the repository, checkout a new branch on your forked version, and push changes.
 3. Open a pull request in the [GitHub repository](https://github.com/doorlay/garminmaps/pulls).
 
-Building & releasing (author only):
+Building & releasing to PyPI (author only):
 1. Bump the version of the project in `pyproject.toml`.
 2. `python3 -m build`
-3. `python3 -m twine upload dist/*`
+3. To release to TestPyPI: `python3 -m twine upload --repository testpypi dist/*`
+4. To release to PyPI: `python3 -m twine upload dist/*`
 
 <!-- ## Future Work
 - Add support for range-based plotting

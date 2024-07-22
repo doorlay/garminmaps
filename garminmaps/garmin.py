@@ -3,8 +3,8 @@ from garminconnect import Garmin, GarminConnectAuthenticationError
 from garth.exc import GarthHTTPError
 from getpass import getpass
 
-from .activities import Activity
-from .utils import create_date_range
+from garminmaps.activities import Activity
+from garminmaps.utils import create_date_range
 
 TOKEN_DIR = "~/.garminmaps"
 

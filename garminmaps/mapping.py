@@ -1,8 +1,8 @@
 from folium import Map, PolyLine, Marker, Icon
 from gpxpy import parse
 
-from .activities import Activity
-from .utils import create_activity_summary
+from garminmaps.activities import Activity
+from garminmaps.utils import create_activity_summary
 
 
 def create_map(activity: Activity = None) -> Map:

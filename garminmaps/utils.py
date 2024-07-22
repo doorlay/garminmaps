@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 from pandas import date_range
 from typing import List
 
-from .activities import Activity
+from garminmaps.activities import Activity
 
 
 def string_to_datetime(date: str) -> datetime:
