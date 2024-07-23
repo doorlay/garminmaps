@@ -21,7 +21,7 @@ running_map = garminmaps.create_map()
 # Get data for all runs in June 2024
 activites = garminmaps.get_activities(garmin_client, "running", "2024-06-01", "2024-06-30")
 for activity in activites:
-    garmin_client.update_map(activity, running_map, "blue")
+    update_map(activity, running_map, "blue")
 
 # Write the leaflet.js map to disk
 running_map.save("runs.html")

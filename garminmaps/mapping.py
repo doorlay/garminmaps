@@ -1,4 +1,4 @@
-from folium import Map, PolyLine, Marker, Icon
+from folium import Map, PolyLine, Marker, Icon, Popup
 from gpxpy import parse
 
 from garminmaps.activities import Activity
@@ -36,8 +36,12 @@ def create_map(activity: Activity = None) -> Map:
         tiles="cartodb positron",
     )
     PolyLine(points, color="red", weight=2.5, opacity=1).add_to(activity_map)
+    summary = create_activity_summary(activity)
     Marker(
-        location=start_coord, tooltip="Click me!", popup="Run", icon=Icon(icon="cloud")
+        location=start_coord,
+        tooltip="Click me!",
+        popup=summary,
+        icon=Icon(icon="cloud"),
     ).add_to(activity_map)
     return activity_map
 
@@ -70,5 +74,8 @@ def update_map(activity: Activity, activity_map: Map, line_color: str) -> None:
     summary = create_activity_summary(activity)
     PolyLine(points, color=line_color, weight=2.5, opacity=1).add_to(activity_map)
     Marker(
-        location=start_coord, tooltip="Click me!", popup=summary, icon=Icon(icon="cloud")
+        location=start_coord,
+        tooltip="Click me!",
+        popup=summary,
+        icon=Icon(prefix="fa", icon="person-running"),
     ).add_to(activity_map)
