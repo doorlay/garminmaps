@@ -15,7 +15,13 @@ def get_mfa():
 
 
 def login() -> Garmin:
-    """Connects to the Garmin server via OAuth2 and returns a Garmin object."""
+    """Connects to the Garmin server via OAuth2 and returns a Garmin object. This login will generate an OAuth2
+    login token, valid for one year, and store this on your host in ~/.garminmaps. This token will be used for
+    subsequent logins to avoid needing to re-enter your credentials.
+
+    Returns:
+        Garmin: a Garmin Connect object.
+    """
     try:
         # Attempt to resume an active session, if there is one
         garmin = Garmin()
