@@ -37,4 +37,4 @@ def create_activity_summary(activity: Activity, metric: bool = False) -> str:
         distance = round(activity.distance / 1000, 2)
     else:
         distance = meters_to_miles(activity.distance)
-    return f"Distance: {distance}\nDuration: {duration_minutes}:{duration_seconds}"
+    return f"Date: {activity.date}\nDistance: {distance}\nDuration: {duration_minutes}:{duration_seconds}"

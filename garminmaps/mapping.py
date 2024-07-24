@@ -39,7 +39,6 @@ def create_map(activity: Activity = None) -> Map:
     summary = create_activity_summary(activity)
     Marker(
         location=start_coord,
-        tooltip="Click me!",
         popup=summary,
         icon=Icon(icon="cloud"),
     ).add_to(activity_map)
@@ -75,7 +74,6 @@ def update_map(activity: Activity, activity_map: Map, line_color: str) -> None:
     PolyLine(points, color=line_color, weight=2.5, opacity=1).add_to(activity_map)
     Marker(
         location=start_coord,
-        tooltip="Click me!",
         popup=summary,
         icon=Icon(prefix="fa", icon="person-running"),
     ).add_to(activity_map)
